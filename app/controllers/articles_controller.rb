@@ -1,0 +1,68 @@
+class ArticlesController < ApplicationController
+
+	def index
+		@selected_category_id = params[:category_id]
+		@categories = Category.all.order('name ASC')
+
+		if (params[:category_id])
+			@articles = Article.all.where(["category_id = ?", params[:category_id]]).order('ranking')
+		else
+			@articles = Article.all.order('category_id ASC, title')
+		end
+	end
+
+	def show
+		@article = Article.find(params[:id])
+	end
+
+	def new
+		@article = Article.new
+		@article.category_id = params[:category_id]
+	end
+
+	def edit
+		@article = Article.find(params[:id])
+	end
+
+	def create
+		@new_rank = Article.where(["category_id = ?", params[:category_id]]).order('ranking').last.ranking.to_i+1
+		@article = Article.new(article_params)
+		@article.rank = @new_rank
+
+		if @article.save
+			redirect_to articles_path(category_id: params[:category_id])
+		else
+			render 'new'
+		end
+	end
+
+	def update
+		@article = Article.find(params[:id])
+
+		if @article.update(article_params)
+			redirect_to @article
+		else 
+			render 'edit'
+		end
+	end
+
+	def destroy
+		Article.rerank(params[:id])
+		
+		@article = Article.find(params[:id])
+		@article.destroy
+
+		redirect_to articles_path
+	end
+
+	def rank
+		Article.rank(params[:id], params[:rank])
+		redirect_to articles_path(category_id: Article.find(params[:id]).category_id)
+	end
+
+	private
+
+	def article_params
+		params.require(:article).permit(:title, :text, :category_id)
+	end
+end

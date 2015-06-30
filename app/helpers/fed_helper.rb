@@ -1,0 +1,2 @@
+module FedHelper
+end

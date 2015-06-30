@@ -1,0 +1,55 @@
+<h1>Listing articles</h1>
+ 
+<table>
+  <tr>
+    <td><%= link_to 'Show All', articles_path %></td>
+  <% @categories.each do |category| %>
+    <td><%= link_to category.name, articles_path(category_id: category.id) %></td>
+  <% end %>
+  </tr>
+</table>
+<br><br>
+
+<table border=1>
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Text</th>
+    <th>Category</th>
+    <% if @selected_category_id && @articles.count > 1 %>
+      <th>Rank</th>
+      <th colspan="5"></th>
+    <% else %>
+      <th colspan="3"></th>
+    <% end %>
+  </tr>
+ 
+  <% @articles.each.with_index do |article, index| %>
+    <tr>
+      <td><%= article.id %></td>
+      <td><%= article.title %></td>
+      <td><%= article.text %></td>
+      <td><%= @categories.find(article.category_id).name %></td>
+      <% if @selected_category_id && @articles.count > 1 %>
+        <td><%= article.ranking %></td>
+      <% end %>
+      <td><%= link_to 'View', article_path(article) %></td>
+      <td><%= link_to 'Edit', edit_article_path(article) %></td>
+      <td><%= link_to 'Delete', article_path(article), method: :delete, data: {confirm: 'Are you sure?'} %></td>
+      <% if @selected_category_id && @articles.count > 1 %>
+        <td>
+          <% if index != 0 %>
+            <%= link_to 'Up', rank_article_path(article, rank: 'up') %>
+          <% end %>
+        </td>
+        <td>
+          <% if index != @articles.count-1 %>
+            <%= link_to 'Down', rank_article_path(article, rank: 'down') %>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<br/><br/>
+<%= link_to 'New Article', new_article_path(category_id: @selected_category_id) %>
