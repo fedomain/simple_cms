@@ -3,6 +3,17 @@ class Article < ActiveRecord::Base
 	has_many :comments, dependent: :destroy
 	validates :title, presence: true, length: { minimum: 5 }
 
+	def self.find_by_rank(id, rank)
+		@this_article = find(id)
+
+		if (rank == "up")
+			@next_article = find_by(ranking: @this_article.ranking.to_i-1, category_id: @this_article.category_id)
+		else
+			@next_article = find_by(ranking: @this_article.ranking.to_i+1, category_id: @this_article.category_id)
+		end
+	end
+
+
 	def self.rank(id, rank)
 		@this_article = find(id)
 
@@ -34,12 +45,12 @@ class Article < ActiveRecord::Base
 
 	def rankup
 		self.ranking = self.ranking - 1
-		self.save
+		#self.save
 	end
 
 	def rankdown
 		self.ranking = self.ranking + 1
-		self.save
+		#self.save
 	end
 
 end
