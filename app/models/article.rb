@@ -44,13 +44,64 @@ class Article < ActiveRecord::Base
 	end
 
 	def rankup
-		self.ranking = self.ranking - 1
-		#self.save
+		#swap_rank(self.id, self.ranking, self.category_id, rank)
+
+		#@affected_article = Article.find_by(ranking: ranking.to_i-1, category_id: category_id)
+		
+		#self.ranking = self.ranking - 1
+		#@affected_article.ranking = @affected_article.ranking + 1
+
+		#Article.transaction do
+		#	self.save
+		#	@affected_article.save
+		#end
+
+		@affected_article = Article.find_by(ranking: ranking-1, category_id: category_id)
+
+		swap_rank(@affected_article)
+
 	end
 
 	def rankdown
-		self.ranking = self.ranking + 1
-		#self.save
+		#swap_rank(self.id, self.ranking, self.category_id, rank)
+
+		#@affected_article = Article.find_by(ranking: ranking.to_i+1, category_id: category_id)
+
+		#self.ranking = self.ranking + 1
+		#@affected_article.ranking = @affected_article.ranking - 1
+
+		#Article.transaction do
+		#	self.save
+		#	@affected_article.save
+		#end
+
+		@affected_article = Article.find_by(ranking: ranking+1, category_id: category_id)
+
+		swap_rank(@affected_article)
 	end
 
+	private
+
+	def swap_rank(affected_article)
+		#if (rank == 'up')
+		#	@affected_article = Article.find_by(ranking: ranking.to_i-1, category_id: category_id)
+		#	@affected_article.ranking = @affected_article.ranking + 1
+		#else
+		#	@affected_article = Article.find_by(ranking: ranking.to_i+1, category_id: category_id)
+		#	@affected_article.ranking = @affected_article.ranking - 1
+		#end
+
+		#@affected_article.save
+
+		@current_ranking = self.ranking
+
+		self.ranking = affected_article.ranking
+		affected_article.ranking = @current_ranking
+
+		Article.transaction do
+			self.save
+			affected_article.save
+		end
+
+	end
 end

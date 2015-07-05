@@ -57,18 +57,18 @@ class ArticlesController < ApplicationController
 
 	def rank
 		@this_article = Article.find(params[:id])
-		@affected_article = Article.find_by_rank(params[:id], params[:rank])
+		#@affected_article = Article.find_by_rank(params[:id], params[:rank])
 
 		if (params[:rank] == 'up')
 			@this_article.rankup
-			@affected_article.rankdown
+			#@affected_article.rankdown
 		else
 			@this_article.rankdown
-			@affected_article.rankup
+			#@affected_article.rankup
 		end
 
-		@this_article.save
-		@affected_article.save
+		#@this_article.save
+		#@affected_article.save
 
 		redirect_to articles_path(category_id: Article.find(params[:id]).category_id)
 	end
