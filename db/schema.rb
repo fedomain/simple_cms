@@ -11,19 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150630052153) do
-
-  create_table "admin_users", force: :cascade do |t|
-    t.string   "first_name",      limit: 25
-    t.string   "last_name",       limit: 50
-    t.string   "email",           limit: 100, default: "", null: false
-    t.string   "username",        limit: 25
-    t.string   "hashed_password", limit: 40
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
-  end
-
-  add_index "admin_users", ["username"], name: "index_admin_users_on_username", using: :btree
+ActiveRecord::Schema.define(version: 20150709021154) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "title",       limit: 255
@@ -83,6 +71,13 @@ ActiveRecord::Schema.define(version: 20150630052153) do
     t.boolean  "visible",    limit: 1,   default: true
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "email",           limit: 255
+    t.string   "password_digest", limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_foreign_key "comments", "articles"

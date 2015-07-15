@@ -2,14 +2,58 @@
  
 <table>
   <tr>
-    <td><%= link_to 'Show All', articles_path %></td>
-  <% @categories.each do |category| %>
-    <td><%= link_to category.name, articles_path(category_id: category.id) %></td>
-  <% end %>
+    <td>
+      <% if @selected_category_id.blank? %>
+        Show All
+      <% else %>
+        <%= link_to 'Show All', articles_path %>
+      <% end %>
+    </td>
+    <% @categories.each do |category| %>
+      <td>
+        <% if @selected_category_id.to_i == category.id %>
+          <%= category.name %>
+        <% else %>
+          <%= link_to category.name, articles_path(category_id: category.id) %>
+        <% end %>
+      </td>
+    <% end %>
   </tr>
 </table>
 <br><br>
 
+<table>
+  <% @articles.each.with_index do |article, index| %>
+    <tr>
+      <td>
+        <%= link_to article.title, article_path(article) %><br>
+        <span style="font-style: italic;color:grey;font-size:smaller;"><%= article.created_at.to_formatted_s(:long) %></span>
+      </td>
+    </tr>
+    <tr>
+      <td><%= article.text %></td>
+    </tr>
+    <tr>
+      <td>
+        [<%= link_to 'Edit', edit_article_path(article) %>]&nbsp;
+        [<%= link_to 'Delete', article_path(article), method: :delete, data: {confirm: 'Are you sure?'} %>]&nbsp;
+        <% if @selected_category_id && @articles.count > 1 %>
+          <% if index != 0 %>
+            [<%= link_to 'Up', rank_article_path(article, rank: 'up') %>]&nbsp;
+          <% end %>
+          <% if index != @articles.count-1 %>
+            [<%= link_to 'Down', rank_article_path(article, rank: 'down') %>]
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+    <tr><td><br></td></tr>
+  <% end %>
+</table>
+
+
+
+<% if false %>
 <table border=1>
   <tr>
     <th>ID</th>
@@ -51,5 +95,6 @@
     </tr>
   <% end %>
 </table>
+<% end %>
 <br/><br/>
 <%= link_to 'New Article', new_article_path(category_id: @selected_category_id) %>

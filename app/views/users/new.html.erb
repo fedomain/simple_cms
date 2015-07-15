@@ -1,0 +1,33 @@
+<%= form_for @user do |f| %>
+	<% if @user.errors.any? %>
+		<div>
+			<h2>Form is invalid</h2>
+			<ul>
+				<% @user.errors.full_messages.each do |message| %>
+					<li><%= message %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+
+	<div>
+		<%= f.label :email %> <br/>
+		<%= f.text_field :email %>
+	</div>
+
+	<div>
+		<%= f.label :password %> <br/>
+		<%= f.password_field :password %>
+	</div>
+
+	<div>
+		<%= f.label :password_confirmation %> <br/>
+		<%= f.password_field :password_confirmation %>
+	</div>
+
+	<div><%= f.submit %></div>
+<% end %>
+
+<br/><br/>
+
+<%= link_to 'Home', root_url %>

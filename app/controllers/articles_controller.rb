@@ -1,4 +1,5 @@
 class ArticlesController < ApplicationController
+	before_filter :authorize, only: [:edit, :update, :destroy]
 
 	def index
 		@selected_category_id = params[:category_id]
@@ -25,12 +26,12 @@ class ArticlesController < ApplicationController
 	end
 
 	def create
-		@new_rank = Article.where(["category_id = ?", params[:category_id]]).order('ranking').last.ranking.to_i+1
+		@new_rank = Article.all.where(["category_id = ?", article_params[:category_id]]).order('ranking').last.ranking+1
 		@article = Article.new(article_params)
-		@article.rank = @new_rank
+		@article.ranking = @new_rank
 
 		if @article.save
-			redirect_to articles_path(category_id: params[:category_id])
+			redirect_to articles_path(category_id: article_params[:category_id])
 		else
 			render 'new'
 		end

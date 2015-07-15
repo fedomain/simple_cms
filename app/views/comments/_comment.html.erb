@@ -1,15 +1,14 @@
+
 <p>
-  <strong>Commenter:</strong>
-  <%= comment.commenter %>
-</p>
- 
-<p>
-  <strong>Comment:</strong>
   <%= comment.body %>
+  <br/><br/>
+  <span style="font-style:italic;">By: <%= comment.commenter %></span>
 </p>
 
+<% if current_user %>
 <p>
   <%= link_to 'Destroy Comment', [comment.article, comment],
                method: :delete,
                data: { confirm: 'Are you sure?' } %>
 </p>
+<% end %>
